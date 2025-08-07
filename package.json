@@ -1,5 +1,23 @@
 {
+  "name": "foundifybackend",
+  "version": "1.0.0",
+  "main": "foundifybackend.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
   "dependencies": {
-    "@capacitor/android": "^7.3.0"
-  }
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^4.21.2",
+    "firebase-admin": "^13.4.0",
+    "natural": "^8.1.0",
+    "nodemailer": "^7.0.3"
+  },
+  "type": "commonjs"
 }
