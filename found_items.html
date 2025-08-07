@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Foundify - Report Found Item</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(120deg, #f7f7f7, #e9ecef);
+            color: #333;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: url('https://source.unsplash.com/1600x900/?found,discovery') no-repeat center center/cover;
+            filter: blur(8px) brightness(0.7);
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 500px;
+            animation: fadeIn 1.5s ease;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #0056b3;
+            font-size: 2.5rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        form {
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        textarea,
+        input[type="email"],
+        input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        textarea {
+            height: 100px;
+        }
+
+        button {
+            font-size: 1rem;
+            padding: 12px 20px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            color: #fff;
+            background: linear-gradient(to right, #007bff, #0056b3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 15px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .back-link:hover {
+            color: #0056b3;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+    <div class="container">
+        <h1>Report Found Item</h1>
+        <form id="found-item-form">
+            <label for="item-name">Item Name:</label>
+            <input type="text" id="item-name" placeholder="e.g., Phone, Keys, Wallet" required>
+
+            <label for="item-description">Item Description:</label>
+            <textarea id="item-description" placeholder="Color, Brand, Model, Any identifying features" required></textarea>
+
+            <label for="location">Location of Finding:</label>
+            <input type="text" id="location" placeholder="e.g., Library, Bus Stop, Park" required>
+
+            <label for="date-of-finding">Date of Finding:</label>
+            <input type="date" id="date-of-finding" required>
+
+            <label for="contact-info">Your Contact Information:</label>
+            <input type="email" id="contact-info" placeholder="Your Email Address" required>
+
+            <button type="submit">Submit Report</button>
+        </form>
+        <a class="back-link" href="html_front.html">&larr; Back to Homepage</a>
+    </div>
+
+    <!-- ✅ SCRIPT ADDED HERE (Just before </body>) -->
+    <script>
+        document.getElementById("found-item-form").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent page refresh
+    
+            const itemName = document.getElementById("item-name").value;
+            const description = document.getElementById("item-description").value;
+            const location = document.getElementById("location").value;
+            const date = document.getElementById("date-of-finding").value;
+            const contact = document.getElementById("contact-info").value;
+    
+            fetch("http://192.168.0.113:5000/match-found-item", {  // ✅ Calls match-found-item directly!
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ itemName, description, location, date, contact })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message || "Found item reported successfully!");
+                window.location.href = "html_front.html"; // ✅ Redirect to homepage
+            })
+            .catch(error => console.error("Error:", error));
+        });
+    </script>
+    
+</body>
+</html>

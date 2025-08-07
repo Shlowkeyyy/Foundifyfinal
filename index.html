@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Foundify | Authentication</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #8d8deb;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 400px;
+      text-align: center;
+    }
+
+    .container h1 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .container h3 {
+      color: #666;
+      font-size: 16px;
+      margin-bottom: 25px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+
+    .form-group label {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    .form-group input {
+      width: 90%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .form-group input:focus {
+      border-color: #3498db;
+      outline: none;
+    }
+
+    .btn {
+      width: 100%;
+      background-color: #3498db;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background-color: #2874a6;
+    }
+
+    .switch {
+      margin-top: 25px;
+      font-size: 14px;
+    }
+
+    .switch a {
+      color: #3498db;
+      text-decoration: none;
+    }
+
+    .switch a:hover {
+      text-decoration: underline;
+    }
+
+    .error {
+      color: red;
+      font-size: 12px;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="auth-container">
+    <h1>Foundify</h1>
+    <h3>Reclaim Your Belongings Effortlessly - Log In Now!</h3>
+
+    <!-- Registration Form -->
+    <form id="registration-form" style="display: none;">
+      <div class="form-group">
+        <label for="reg-username">Username</label>
+        <input type="text" id="reg-username" required>
+      </div>
+      <div class="form-group">
+        <label for="reg-email">Email</label>
+        <input type="email" id="reg-email" required>
+      </div>
+      <div class="form-group">
+        <label for="reg-password">Password</label>
+        <input type="password" id="reg-password" required>
+      </div>
+      <div class="form-group">
+        <label for="reg-phone">Phone Number</label>
+        <input type="text" id="reg-phone" required>
+      </div>
+      <button type="button" class="btn" onclick="register()">Register</button>
+      <p class="switch">Already have an account? <a href="#" onclick="showLogin()">Login here</a></p>
+    </form>
+
+    <!-- Login Form -->
+    <form id="login-form">
+      <div class="form-group">
+        <label for="login-email">Email</label>
+        <input type="email" id="login-email" required>
+      </div>
+      <div class="form-group">
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" required>
+      </div>
+      <button type="button" class="btn" onclick="login()">Login</button>
+      <p class="switch">Don't have an account? <a href="#" onclick="showRegister()">Register here</a></p>
+    </form>
+  </div>
+
+  <script>
+    const BASE_URL = "http://192.168.0.113:5000"; // ✅ Replace with your IP
+
+    function showRegister() {
+      document.getElementById("registration-form").style.display = "block";
+      document.getElementById("login-form").style.display = "none";
+    }
+
+    function showLogin() {
+      document.getElementById("registration-form").style.display = "none";
+      document.getElementById("login-form").style.display = "block";
+    }
+
+    function register() {
+    const fullName = document.getElementById("reg-username").value;
+    const email = document.getElementById("reg-email").value;
+    const password = document.getElementById("reg-password").value;
+    const phone = "1234567890"; // Default or optional
+
+    fetch("http://192.168.0.113:5000/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fullName, email, password, phone })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.uid) {
+            alert("Registration successful!");
+            showLogin();
+        } else {
+            alert("Error: " + data.error);
+        }
+    })
+    .catch(err => {
+        alert("Something went wrong. Please try again.\n" + err);
+        console.error(err);
+    });
+}
+
+
+function login() {
+    const email = document.getElementById("login-email").value;
+    const password = document.getElementById("login-password").value;
+
+    fetch("http://192.168.0.113:5000/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.uid) {
+            alert("Login successful!");
+            window.location.href = "html_front.html";
+        } else {
+            alert("Error: " + data.error);
+        }
+    })
+    .catch(err => {
+        alert("Something went wrong. Please try again.\n" + err);
+        console.error(err);
+    });
+}
+
+
+    showLogin(); // Show login form by default
+  </script>
+</body>
+</html>
